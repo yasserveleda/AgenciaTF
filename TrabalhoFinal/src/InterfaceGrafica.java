@@ -1,4 +1,5 @@
 
+import java.awt.ComponentOrientation;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -25,6 +26,10 @@ public class InterfaceGrafica extends javax.swing.JPanel {
     public InterfaceGrafica(JButton gerarRelatorio, JTextField dados, JPanel janelaDeDados) {
         gerarRelatorio = new JButton("Gerar relatório");
         dados = new JTextField();
+    }
+
+    InterfaceGrafica() {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     /**
@@ -129,7 +134,7 @@ public class InterfaceGrafica extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         // Colocar o método que realiza a leitura do arquivo
-        jTextField1.setText(TOOL_TIP_TEXT_KEY);
+        jTextField1.setText();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

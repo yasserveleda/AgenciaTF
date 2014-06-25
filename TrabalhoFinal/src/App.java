@@ -14,6 +14,9 @@ public class App {
         Simulacao sim = new Simulacao(true);
         sim.simular();
         sim.imprimirResultados();
+        
+        InterfaceGrafica in = new InterfaceGrafica();
+        
     }
 }
 

@@ -8,6 +8,6 @@ public class Fila {
     public Cliente getCliente() { return cliente;}
    
     public void setCliente(Cliente cliente) {}    
-
+        
 }
 
