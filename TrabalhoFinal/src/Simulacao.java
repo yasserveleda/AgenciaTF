@@ -13,10 +13,14 @@ public class Simulacao
     
     public Simulacao(boolean t){}
     
-    public void simular(){}
-    public void simularSegundaParte(){}
+    public void simular(){
+    }
+    public void simularSegundaParte(){
+    }
     
-    public void limpar(){}
+    public void limpar(){
+    }
     
-    public void imprimirResultados(){}
+    public void imprimirResultados(){
+    }
 }

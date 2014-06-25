@@ -31,13 +31,15 @@ public class Acumulador {
 
     public double getMedia() {
         double media = 0;
+        double total = 0;
 
         if (contador <= 0) {
             return 0;
         }
 
         if (contador > 0) {
-            media = getValor() / contador;
+            total = total + valor;
+            media = total / contador;
         }
 
         return media;
