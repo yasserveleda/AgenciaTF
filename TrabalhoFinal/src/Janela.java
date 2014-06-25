@@ -29,15 +29,15 @@ public class Janela extends JPanel implements ItemListener {
         //Create the check boxes.
         atendimentoButton = new JCheckBox("Atendimento");
         atendimentoButton.setMnemonic(KeyEvent.VK_C);
-        atendimentoButton.setSelected(true);
+        atendimentoButton.setSelected(false);
 
         criarContaButton = new JCheckBox("Cadastro de nova conta");
         criarContaButton.setMnemonic(KeyEvent.VK_G);
-        criarContaButton.setSelected(true);
+        criarContaButton.setSelected(false);
 
         pagamentoButton = new JCheckBox("Pagamento de faturas");
         pagamentoButton.setMnemonic(KeyEvent.VK_H);
-        pagamentoButton.setSelected(true);
+        pagamentoButton.setSelected(false);
 
 
         //Register a listener for the check boxes.
@@ -47,9 +47,6 @@ public class Janela extends JPanel implements ItemListener {
 
         //Indicates what's on the geek.
         choices = new StringBuffer("cght");
-
-
-
 
         //Put the check boxes in a column in a panel
         JPanel checkPanel = new JPanel(new GridLayout(0, 1));
@@ -66,18 +63,23 @@ public class Janela extends JPanel implements ItemListener {
      */
     public void itemStateChanged(ItemEvent e) {
         int index = 0;
-        char c = '-';
         Object source = e.getItemSelectable();
 
         if (source == atendimentoButton) {
+            criarContaButton.setSelected(false);
+            pagamentoButton.setSelected(false);
             index = 0;
-            c = 'c';
+
         } else if (source == criarContaButton) {
+            atendimentoButton.setSelected(false);
+            pagamentoButton.setSelected(false);
             index = 1;
-            c = 'g';
+
         } else if (source == pagamentoButton) {
+            atendimentoButton.setSelected(false);
+            criarContaButton.setSelected(false);
             index = 2;
-            c = 'h';
+
         } 
     }
 
