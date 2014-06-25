@@ -11,16 +11,21 @@ public class GeradorFila {
     }
 
     public boolean gerar() {
-        if (listaFila != null) {
+        // Verifica se a lista está vazia
+        if (listaFila == null) {
+            // Caso esteja gera uma lista
             gerado = true;
         }
+        // Caso não, return false
         return false;
     }
 
     public int getQuantidadeGerada() {
         int cont = 0;
         
+        // Verifica se fila foi gerado, caso sim
         if (gerado == true){
+            // Concatena o contador
             cont++;
         }
         

@@ -8,7 +8,8 @@ public class Fila {
     }
 
     public Cliente getCliente() { 
-        return cliente;}
+        return cliente;
+    }
    
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
