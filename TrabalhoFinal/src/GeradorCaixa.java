@@ -7,10 +7,14 @@ public class GeradorCaixa {
 
     public GeradorCaixa(Caixa caixa) {
         this.caixa = caixa;
+        listaCaixa = new ListArray<>();
     }
 
     public boolean gerar() {
-        return gerado;
+        if (listaCaixa != null) {
+            gerado = true;
+        }
+        return false;
     }
 
     public int getQuantidadeGerada() {

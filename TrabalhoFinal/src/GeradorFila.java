@@ -1,22 +1,29 @@
 
 public class GeradorFila {
 
-    private ListArray<Fila> lista;
+    private ListArray<Fila> listaFila;
     private Fila fila;
     private boolean gerado = false;
 
     public GeradorFila(Fila fila) {
         this.fila = fila;
+        listaFila = new ListArray<>();
     }
 
     public boolean gerar() {
-        if (fila != null) {
+        if (listaFila != null) {
             gerado = true;
         }
         return false;
     }
 
     public int getQuantidadeGerada() {
-        return lista.size();
+        int cont = 0;
+        
+        if (gerado == true){
+            cont++;
+        }
+        
+        return cont;
     }
 }
