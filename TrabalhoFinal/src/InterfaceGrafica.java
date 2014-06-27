@@ -1,6 +1,8 @@
 
 import java.awt.ComponentOrientation;
+import java.awt.TextField;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -26,7 +28,17 @@ public class InterfaceGrafica extends javax.swing.JPanel {
     public InterfaceGrafica(JButton gerarRelatorio, JTextField dados, JPanel janelaDeDados) {
         gerarRelatorio = new JButton("Gerar relatório");
         dados = new JTextField();
-    }
+        
+        // OLHAR
+        /*boolean b = simula.leArquivo(jTextField.getText());
+        if (b == false){
+            JOptionPane.showMessageDialog(this, "Erro na leitura");
+        }
+        else{
+            this.jTextField1.setText("Oi tchau");
+        }
+        
+    }*/
 
     InterfaceGrafica() {
         throw new UnsupportedOperationException("Not yet implemented");
