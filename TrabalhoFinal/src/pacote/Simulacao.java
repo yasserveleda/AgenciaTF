@@ -14,7 +14,8 @@ public class Simulacao
 {
     private static double duracao; //arquivo
     private static double probabilidadeChegada; //arquivo
-    private static final int totalCaixas = 5; //arquivo
+    private static final int totalCaixas = 5;
+    private static final int totalCaixasPilha = 2; 
     private QueueTAD<Cliente> fila;
     private Caixa[] caixas, caixasPilha;
     private GeradorClientes geradorClientes;
@@ -30,7 +31,7 @@ public class Simulacao
         pilha = new StackArray<Cliente>();
         fila = new QueueLinked<Cliente>();
         caixas = new Caixa[totalCaixas];
-        caixasPilha = new Caixa[totalCaixas];
+        caixasPilha = new Caixa[totalCaixasPilha];
         geradorClientes = new GeradorClientes(probabilidadeChegada);
         statTemposEsperaFila = new Acumulador();
         statComprimentosFila = new Acumulador();
@@ -41,9 +42,13 @@ public class Simulacao
 
         for (int c = 0; c < totalCaixas; c++) {
             caixas[c] = new Caixa();
+            
+        }
+        
+        for (int c = 0; c < totalCaixasPilha; c++) {
+       
             caixasPilha[c] = new Caixa();
         }
-
  
     }
     
@@ -113,7 +118,7 @@ public class Simulacao
                 }
 
                 //verificar se o caixa esta vazio
-                for (int c2 = random.nextInt(totalCaixas), j = 0; j < totalCaixas; j++) {
+                for (int c2 = random.nextInt(totalCaixasPilha), j = 0; j < totalCaixasPilha; j++) {
                     if (caixasPilha[c2].estaVazio()) {
 
                         //se o caixa esta vazio, atender o primeiro cliente da fila se ele existir
@@ -150,7 +155,7 @@ public class Simulacao
         fila = new QueueLinked<Cliente>();
         pilha = new StackArray<Cliente>();
         caixas = new Caixa[totalCaixas];
-        caixasPilha = new Caixa[totalCaixas];
+        caixasPilha = new Caixa[totalCaixasPilha];
         geradorClientes = new GeradorClientes(probabilidadeChegada);
         statTemposEsperaFila = new Acumulador();
         statComprimentosFila = new Acumulador();
@@ -158,7 +163,7 @@ public class Simulacao
         for (int c = 0; c < totalCaixas; c++) {
             caixas[c] = new Caixa();
         }
-        for (int c2 = 0; c2 < totalCaixas; c2++) {
+        for (int c2 = 0; c2 < totalCaixasPilha; c2++) {
             caixasPilha[c2] = new Caixa();
         }
     }
@@ -183,12 +188,12 @@ public class Simulacao
         auxString = auxString + "\n" + "Total de clientes gerados:" + geradorClientes.getQuantidadeGerada();
         auxString = auxString + "\n" + "Tempo medio de espera da fila: " + statTemposEsperaFila.getMedia();
         auxString = auxString + "\n" + "Comprimento medio da fila: " + statComprimentosFila.getMedia();
-        for (int c = 0; c < totalCaixas; c++) {
+        for (int c = 0; c < totalCaixasPilha; c++) {
             double caixaGetNumeroAtendidos = caixasPilha[c].getNumeroAtendidos();
             auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da pilha: " + caixasPilha[c].getNumeroAtendidos()+"("+((caixaGetNumeroAtendidos/geradorClientes.getQuantidadeGerada()*100))+"%)";
         }
         auxString = auxString + "\n" + "Clientes ainda na pilha:" + pilha.size();
-        for (int c = 0; c < totalCaixas; c++) {
+        for (int c = 0; c < totalCaixasPilha; c++) {
             auxString = auxString + "\n" + "Cliente ainda no caixa da pilha" + (c + 1) + ": " + (caixasPilha[c].getClienteAtual() != null);
         }
         auxString = auxString + "\n" + "Tempo medio de espera da pilha: " + statTemposEsperaPilha.getMedia();
