@@ -1,22 +1,29 @@
 
 import java.util.Random;
+import java.util.Random;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
 
 public class Simulacao
 {
-    private static final int duracao = 200; //arquivo
-    private static final double probabilidadeChegada = 0.5; //arquivo
+    private static double duracao; //arquivo
+    private static double probabilidadeChegada; //arquivo
     private static final int totalCaixas = 5; //arquivo
     private QueueTAD<Cliente> fila;
     private Caixa[] caixas, caixasPilha;
     private GeradorClientes geradorClientes;
-    private Acumulador statTemposEsperaFila;
-    private Acumulador statComprimentosFila;
+    private Acumulador statTemposEsperaFila, statTemposEsperaPilha;
+    private Acumulador statComprimentosFila, statComprimentosPilha;
     private Random random = new Random();
     private boolean trace; // valor indica se a simulacao ira imprimir
     private StackArray<Cliente> pilha;
-    private String auxString; 
+    private static String auxString, auxString2, aux, texto = "arquivo.txt"; 
     
     public Simulacao(boolean t){
         
@@ -27,62 +34,77 @@ public class Simulacao
         geradorClientes = new GeradorClientes(probabilidadeChegada);
         statTemposEsperaFila = new Acumulador();
         statComprimentosFila = new Acumulador();
+        statTemposEsperaPilha = new Acumulador();
+        statComprimentosPilha = new Acumulador();
         trace = t;
+        auxString2 = "";
 
         for (int c = 0; c < totalCaixas; c++) {
             caixas[c] = new Caixa();
+            caixasPilha[c] = new Caixa();
         }
-        for (int c2 = 0; c2 < totalCaixas; c2++) {
-            caixasPilha[c2] = new Caixa();
-        }
-        
+
+ 
     }
     
-    public void simular(){
-        
-       
+    public void leitura() {
+        // TODO code application logic here
+        Path path = Paths.get("C:\\"+texto);
+        try (Scanner sc = new Scanner(Files.newBufferedReader(path, Charset.defaultCharset()))) {
+            String linha = null;
+            sc.useDelimiter("[;,:\\n]"); // separadores: ; e nova linha
+            while (sc.hasNext()) {
+                aux = sc.next();
+                duracao = Double.parseDouble(aux);
+                aux = sc.next();
+                probabilidadeChegada = Double.parseDouble(aux);
+
+            }
+        } catch (IOException e) {
+            System.err.format("Erro de E/S: %s%n", e);
+        }
+    }
+
+    public void alteraArquivo(String aux) {
+        this.texto = aux;
+    }
+    
+    
+    public String simular() {
+        // realizar a simulacao por um certo numero de passos de duracao
         for (int tempo = 0; tempo < duracao; tempo++) {
-            
+            // verificar se um cliente chegou
             if (geradorClientes.gerar()) {
-               
-                Cliente c = new Cliente(geradorClientes.getQuantidadeGerada(),
-                        tempo);
+                // se cliente chegou, criar um cliente e inserir na fila do
+                // caixa
+                Cliente c = new Cliente(geradorClientes.getQuantidadeGerada(),tempo);
                 fila.add(c);
                 if (trace) {
-                    System.out.println(tempo + ": cliente " + c.getNumero()
-                            + " (" + c.getTempoAtendimento()
-                            + " min) entra na fila - " + fila.size()
-                            + " pessoa(s)");
+                    auxString2 = auxString2 + tempo + ": cliente " + c.getNumero()+ " (" + c.getTempoAtendimento()+ " min) entra na fila - " + fila.size()+ " pessoa(s)" + "\n";
                 }
             }
-            
+            // verificar se os caixas estÃ£o vazios
             for (int c = random.nextInt(totalCaixas), i = 0; i < totalCaixas; i++) {
                 if (caixas[c].estaVazio()) {
-                    
+                    // se o caixa esta vazio, atender o primeiro cliente da fila
+                    // se ele existir
                     if (!fila.isEmpty()) {
-                        
+                        // tirar o cliente do inicio da fila e atender no caixa
                         caixas[c].atenderNovoCliente(fila.remove());
-                        statTemposEsperaFila.adicionar(tempo
-                                - caixas[c].getClienteAtual().getInstanteChegada());
+                        statTemposEsperaFila.adicionar(tempo - caixas[c].getClienteAtual().getInstanteChegada());
                         if (trace) {
-                            System.out.println(tempo + ": cliente "
-                                    + caixas[c].getClienteAtual().getNumero()
-                                    + " chega ao caixa " + (c + 1));
-
-                            System.out.println(tempo + ": cliente "
-                                    + caixas[c].getClienteAtual().getNumero()
-                                    + " (" + caixas[c].getClienteAtual().getTempoAtendimento()
-                                    + " min) entra na pilha - " + pilha.size()
-                                    + " pessoa(s)");
+                            auxString2 = auxString2 + "\n" + tempo + ": cliente " + caixas[c].getClienteAtual().getNumero()+ " chega ao caixa " + (c + 1);
+                            auxString2 = auxString2 + "\n" + tempo + ": cliente "+ caixas[c].getClienteAtual().getNumero()+ " (" + caixas[c].getClienteAtual().getTempoAtendimento()+ " min) entra na pilha - " + pilha.size() + " pessoa(s)";
                         }
                     }
                 } else {
-                    
+                    // se o caixa ja esta ocupado, diminuir de um em um o tempo
+                    // de atendimento ate chegar a zero
                     if (caixas[c].getClienteAtual().getTempoAtendimento() == 0) {
                         if (trace) {
-                            System.out.println(tempo + ": cliente "
+                            auxString2 = auxString2 + "\n" + tempo + ": cliente "
                                     + caixas[c].getClienteAtual().getNumero()
-                                    + " deixa o caixa " + (c + 1));
+                                    + " deixa o caixa " + (c + 1);
                         }
                         pilha.push(caixas[c].dispensarClienteAtual());
                     } else {
@@ -90,37 +112,38 @@ public class Simulacao
                     }
                 }
 
-                
+                //verificar se o caixa esta vazio
                 for (int c2 = random.nextInt(totalCaixas), j = 0; j < totalCaixas; j++) {
                     if (caixasPilha[c2].estaVazio()) {
 
-                       
+                        //se o caixa esta vazio, atender o primeiro cliente da fila se ele existir
                         if (!pilha.isEmpty()) {
-                          
+                            //tirar o cliente do inicio da pilha e atender no caixa
                             caixasPilha[c2].atenderNovoCliente(pilha.pop());
-                            statTemposEsperaFila.adicionar(tempo - caixasPilha[c2].getClienteAtual().getInstanteChegada());
+                            statTemposEsperaPilha.adicionar(tempo - caixasPilha[c2].getClienteAtual().getInstanteChegada());
                             if (trace) {
-                                System.out.println(tempo + ": cliente " + caixasPilha[c2].getClienteAtual().getNumero() + " chega ao caixa.");
+                                auxString2 = auxString2 + "\n" + tempo + ": cliente " + caixasPilha[c2].getClienteAtual().getNumero() + " chega ao caixa.";
                             }
                         }
                     } else {
-                        
+                        //se o caixa ja esta ocupado, diminuir de um em um o tempo de atendimento ate chegar a zero
                         if (caixasPilha[c2].getClienteAtual().getTempoAtendimento() == 0) {
                             if (trace) {
-                                System.out.println(tempo + ": cliente " + caixasPilha[c2].getClienteAtual().getNumero() + " deixa o caixa.");
+                                auxString2 = auxString2 + "\n" + tempo + ": cliente " + caixasPilha[c2].getClienteAtual().getNumero() + " deixa o caixa.";
                             }
                             caixasPilha[c2].dispensarClienteAtual();
                         } else {
                             caixasPilha[c2].getClienteAtual().decrementarTempoAtendimento();
                         }
                     }
-                    statComprimentosFila.adicionar(pilha.size());
+                    statComprimentosPilha.adicionar(pilha.size());
                 }
 
             }
             statComprimentosFila.adicionar(fila.size());
         }
-        
+
+        return auxString2;
     }
     
     public void limpar(){
@@ -140,67 +163,36 @@ public class Simulacao
         }
     }
     
-    public void imprimirResultados(){
-        System.out.println();
-        System.out.println("Resultados da Simulacao FILA");
-        System.out.println("Duracao:" + duracao);
-        System.out.println("Probabilidade de chegada de clientes: " + probabilidadeChegada);
-        System.out.println("Tempo de atendimento minimo: " + Cliente.tempoMinAtendimento);
-        System.out.println("Tempo de atendimento maximo: " + Cliente.tempoMaxAtendimento);
-
-        for (int c = 0; c < totalCaixas; c++) {
-            System.out.println("Cliente atendidos pelo caixa da fila " + (c + 1) + ": " + caixas[c].getNumeroAtendidos());
-        }
-        System.out.println("Clientes ainda na fila:" + fila.size());
-
-        for (int c = 0; c < totalCaixas; c++) {
-            System.out.println("Cliente ainda no caixa da fila " + (c + 1) + ": " + (caixas[c].getClienteAtual() != null));
-        }
-        System.out.println("Total de clientes gerados: " + geradorClientes.getQuantidadeGerada());
-        System.out.println("Tempo medio de espera: " + statTemposEsperaFila.getMedia());
-        System.out.println("Comprimento medio da fila: " + statComprimentosFila.getMedia());
-        System.out.println();
-        imprimiDadosPilha();
-    }
     
-    public void imprimiDadosPilha() {
-        System.out.println();
-        System.out.println("Resultados da Simulacao PILHA");
-        System.out.println("Duracao:" + duracao);
-
-        for (int c = 0; c < totalCaixas; c++) {
-            System.out.println("Cliente atendidos pelo caixa da pilha " + (c + 1) + ": " + caixasPilha[c].getNumeroAtendidos());
-        }
-
-        for (int c = 0; c < totalCaixas; c++) {
-            System.out.println("Cliente ainda no caixa da pilha" + (c + 1) + ": " + (caixasPilha[c].getClienteAtual() != null));
-        }
-
-        System.out.println("Clientes ainda na pilha:" + pilha.size());
-        System.out.println("Total de clientes pilha:" + geradorClientes.getQuantidadeGerada());//melhoria
-        System.out.println("Tempo medio de espera:" + statTemposEsperaFila.getMedia());
-
-    }
     
     public String salva() {
-        auxString = "Resultados da Simulacao FILA" + "\n";
+
+        auxString = "\n" + "RESULTADOS DA SILMULAÇÃO";
         auxString = auxString + "\n" + "Duracao: " + duracao;
         auxString = auxString + "\n" + "Probabilidade de chegada de clientes: " + probabilidadeChegada;
         auxString = auxString + "\n" + "Tempo de atendimento minimo: " + Cliente.tempoMinAtendimento;
         auxString = auxString + "\n" + "Tempo de atendimento maximo: " + Cliente.tempoMaxAtendimento;
-
+        for (int c = 0; c < totalCaixas; c++) {
+            double caixaGetNumeroAtendidos = caixas[c].getNumeroAtendidos();
+            auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da fila: " + caixas[c].getNumeroAtendidos()+"("+((caixaGetNumeroAtendidos/geradorClientes.getQuantidadeGerada()*100))+"%)";
+        }
         auxString = auxString + "\n" + "Clientes ainda na fila: " + fila.size();
-
-        auxString = auxString + "\n" + "Tempo medio de espera: " + statTemposEsperaFila.getMedia();
-        auxString = auxString + "\n" + "Comprimento medio da fila: " + statComprimentosFila.getMedia();
-        auxString = auxString + "\n" + "Quantidade da pilha: " + pilha.size() + "\n";
-        auxString = auxString + "\n" + "Resultados da Simulacao PILHA\n";
-        auxString = auxString + "\n" + "Duracao:" + duracao;
-
-        auxString = auxString + "\n" + "Clientes ainda na pilha:" + pilha.size();
-
+        for (int c = 0; c < totalCaixas; c++) {
+            auxString = auxString + "\n" + "Cliente ainda no caixa " + (c + 1) + " da fila: " + (caixas[c].getClienteAtual() != null);
+        }
         auxString = auxString + "\n" + "Total de clientes gerados:" + geradorClientes.getQuantidadeGerada();
-        auxString = auxString + "\n" + "Tempo medio de espera:" + statTemposEsperaFila.getMedia();
+        auxString = auxString + "\n" + "Tempo medio de espera da fila: " + statTemposEsperaFila.getMedia();
+        auxString = auxString + "\n" + "Comprimento medio da fila: " + statComprimentosFila.getMedia();
+        for (int c = 0; c < totalCaixas; c++) {
+            double caixaGetNumeroAtendidos = caixasPilha[c].getNumeroAtendidos();
+            auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da pilha: " + caixasPilha[c].getNumeroAtendidos()+"("+((caixaGetNumeroAtendidos/geradorClientes.getQuantidadeGerada()*100))+"%)";
+        }
+        auxString = auxString + "\n" + "Clientes ainda na pilha:" + pilha.size();
+        for (int c = 0; c < totalCaixas; c++) {
+            auxString = auxString + "\n" + "Cliente ainda no caixa da pilha" + (c + 1) + ": " + (caixasPilha[c].getClienteAtual() != null);
+        }
+        auxString = auxString + "\n" + "Tempo medio de espera da pilha: " + statTemposEsperaPilha.getMedia();
+        
 
         return auxString;
 

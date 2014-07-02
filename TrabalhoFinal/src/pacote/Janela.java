@@ -6,7 +6,7 @@
 public class Janela extends javax.swing.JFrame {
 
    
-    String auxiliar;
+    String auxiliar, aux;
     public Janela() {
         initComponents();
     }
@@ -98,14 +98,18 @@ public class Janela extends javax.swing.JFrame {
         // TODO add your handling code here:
         //this.jTextArea1.setText("Oi\nTchau");
        
+        aux = jTextField1.getText().intern();
+        
         Simulacao sim = new Simulacao(true);
-        sim.simular();
+        sim.alteraArquivo(aux);
+        sim.leitura();
+        String auxiliar2 = sim.simular();
         
-        sim.imprimirResultados();
+   
         
-        
-        auxiliar = sim.salva();
+        auxiliar = auxiliar2 + sim.salva();
         this.jTextArea1.setText(auxiliar);
+        
         
         
     }//GEN-LAST:event_jButton1ActionPerformed
