@@ -49,7 +49,7 @@ public class Simulacao
     
     public void leitura() {
         // TODO code application logic here
-        Path path = Paths.get("C:\\"+texto);
+        Path path = Paths.get("H:\\"+texto);
         try (Scanner sc = new Scanner(Files.newBufferedReader(path, Charset.defaultCharset()))) {
             String linha = null;
             sc.useDelimiter("[;,:\\n]"); // separadores: ; e nova linha
