@@ -4,44 +4,34 @@ public class Acumulador {
     private double valor;
     private int contador;
 
-    public Acumulador(double valor, int contador) {
-        this.valor = valor;
-        this.contador = contador;
+    public Acumulador() {
+        valor = 0;
+        contador = 0;
     }
 
     public double getValor() {
-        return valor;
+        return (valor);
     }
 
     public int getContador() {
         return contador;
     }
 
-    public void adicionar(double valor) {
-        if (this.valor != valor) {
-            this.valor = valor;
-        }
+    public void adicionar(double v) {
+        valor = valor + v;
+        contador++;
     }
 
-    public void adicionar(int valor) {
-        if (this.valor != valor){
-            this.valor = valor;
-        }
+    public void adicionar(int v) {
+        valor = valor + v;
+        contador++;
     }
 
     public double getMedia() {
-        double media = 0;
-        double total = 0;
-
-        if (contador <= 0) {
+        if (contador != 0) {
+            return valor / contador;
+        } else {
             return 0;
         }
-
-        if (contador > 0) {
-            total = total + valor;
-            media = total / contador;
-        }
-
-        return media;
     }
 }

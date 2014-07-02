@@ -1,12 +1,12 @@
 
 public class Caixa {
 
-    private Cliente clienteAtual;
+    private Cliente clienteAtual; // cliente sendo atendido no caixa
     private int numeroAtendidos;
 
-    public Caixa(Cliente clienteAtual, int numeroAtendidos) {
-        this.clienteAtual = clienteAtual;
-        this.numeroAtendidos = numeroAtendidos;
+    public Caixa() {
+        clienteAtual = null;
+        numeroAtendidos = 0;
     }
 
     public void atenderNovoCliente(Cliente c) {
@@ -17,26 +17,15 @@ public class Caixa {
     }
 
     public Cliente dispensarClienteAtual() {
-        boolean atendido = true;
-        Cliente c = getClienteAtual();
-
-        // Se o cliente já foi atendido
-        if (atendido) {
-            // Sistema gera um novo cliente
-            atenderNovoCliente(clienteAtual);
-        }
-
-        // E exibe o cliente que foi atendido
+        Cliente c = clienteAtual;
+        clienteAtual = null;
+        numeroAtendidos++;
         return c;
+
     }
 
     public boolean estaVazio() {
-        // Verifica se a fila está vazia
-        if (clienteAtual == null) {
-            return true;
-        }
-        // Caso contrário return false
-        return false;
+        return (clienteAtual == null);
     }
 
     public Cliente getClienteAtual() {
