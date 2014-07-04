@@ -15,8 +15,8 @@ public class Simulacao
 {
     private static double duracao; //arquivo
     private static double probabilidadeChegada; //arquivo
-    private static final int totalCaixas = 5;
-    private static final int totalCaixasPilha = 2; 
+    private static final int totalCaixas = 3;
+    private static final int totalCaixasPilha = 3; 
     private QueueTAD<Cliente> fila;
     private Caixa[] caixas, caixasPilha;
     private GeradorClientes geradorClientes;
@@ -55,7 +55,7 @@ public class Simulacao
     
     public void leitura() {
         // TODO code application logic here
-        Path path = Paths.get("H:\\"+texto);
+        Path path = Paths.get("C:\\"+texto);
         try (Scanner sc = new Scanner(Files.newBufferedReader(path, Charset.defaultCharset()))) {
             String linha = null;
             sc.useDelimiter("[;,:\\n]"); // separadores: ; e nova linha
@@ -173,25 +173,31 @@ public class Simulacao
     
     public String salva() {
 
-        auxString = "\n" + "RESULTADOS DA SILMULAÇÃO";
+        auxString = "\n" + "RESULTADOS DA SILMULAÇÃO"+"\n";
         auxString = auxString + "\n" + "Duracao: " + duracao;
         auxString = auxString + "\n" + "Probabilidade de chegada de clientes: " + probabilidadeChegada;
         auxString = auxString + "\n" + "Tempo de atendimento minimo: " + Cliente.tempoMinAtendimento;
         auxString = auxString + "\n" + "Tempo de atendimento maximo: " + Cliente.tempoMaxAtendimento;
+        auxString = auxString + "\n" + "Total de clientes gerados:" + geradorClientes.getQuantidadeGerada()+"\n"+"\n";
         for (int c = 0; c < totalCaixas; c++) {
             double caixaGetNumeroAtendidos = caixas[c].getNumeroAtendidos();
-            auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da fila: " + caixas[c].getNumeroAtendidos()+"("+((caixaGetNumeroAtendidos/geradorClientes.getQuantidadeGerada()*100))+"%)";
+            auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da fila: " + caixas[c].getNumeroAtendidos()+"("+((caixaGetNumeroAtendidos/geradorClientes.getQuantidadeGerada()*100))+"%)"
+                                  +"\nTempo médio de espera: "+(caixas[c].getNumeroAtendidos()/statTemposEsperaFila.getMedia())
+                                  +"\n";
         }
         auxString = auxString + "\n" + "Clientes ainda na fila: " + fila.size();
         for (int c = 0; c < totalCaixas; c++) {
             auxString = auxString + "\n" + "Cliente ainda no caixa " + (c + 1) + " da fila: " + (caixas[c].getClienteAtual() != null);
         }
-        auxString = auxString + "\n" + "Total de clientes gerados:" + geradorClientes.getQuantidadeGerada();
+        
         auxString = auxString + "\n" + "Tempo medio de espera da fila: " + statTemposEsperaFila.getMedia();
         auxString = auxString + "\n" + "Comprimento medio da fila: " + statComprimentosFila.getMedia();
-        for (int c = 0; c < totalCaixasPilha; c++) {
+        for 
+            (int c = 0; c < totalCaixasPilha; c++) {
             double caixaGetNumeroAtendidos = caixasPilha[c].getNumeroAtendidos();
-            auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da pilha: " + caixasPilha[c].getNumeroAtendidos()+"("+((caixaGetNumeroAtendidos/geradorClientes.getQuantidadeGerada()*100))+"%)";
+            auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da pilha: " + caixasPilha[c].getNumeroAtendidos()+"("+((caixaGetNumeroAtendidos/geradorClientes.getQuantidadeGerada()*100))+"%)"
+                                  +"\nTempo médio de espera: "+(caixasPilha[c].getNumeroAtendidos()/statTemposEsperaFila.getMedia())
+                                  +"\n";  
         }
         auxString = auxString + "\n" + "Clientes ainda na pilha:" + pilha.size();
         for (int c = 0; c < totalCaixasPilha; c++) {
