@@ -106,6 +106,7 @@ public class Janela extends javax.swing.JFrame {
         String auxiliar2 = sim.simular();
         
         sim.adicionaValores();
+        sim.ordena();
         sim.calculaMediana();
         sim.calculaMedia();
         

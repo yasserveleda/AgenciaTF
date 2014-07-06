@@ -184,7 +184,7 @@ public class Simulacao {
         for (int c = 0; c < totalCaixas; c++) {
             double caixaGetNumeroAtendidos = caixas[c].getNumeroAtendidos();
             auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da fila: " + caixas[c].getNumeroAtendidos() + "(" + ((caixaGetNumeroAtendidos / geradorClientes.getQuantidadeGerada() * 100)) + "%)"
-                    + "\nTempo médio de espera: " + (caixas[c].getNumeroAtendidos() / statTemposEsperaFila.getMedia())
+                    + "\nTempo médio de atendimento: " + (caixas[c].getNumeroAtendidos() / statTemposEsperaFila.getMedia())
                     + "\n";
             
         }
@@ -193,19 +193,19 @@ public class Simulacao {
             auxString = auxString + "\n" + "Cliente ainda no caixa " + (c + 1) + " da fila: " + (caixas[c].getClienteAtual() != null);
         }
 
-        auxString = auxString + "\n" + "Tempo medio de espera da fila: " + statTemposEsperaFila.getMedia();
+        auxString = auxString + "\n" + "Tempo medio de espera na fila: " + statTemposEsperaFila.getMedia();
         auxString = auxString + "\n" + "Comprimento medio da fila: " + statComprimentosFila.getMedia();
         for (int c = 0; c < totalCaixasPilha; c++) {
             double caixaGetNumeroAtendidos = caixasPilha[c].getNumeroAtendidos();
             auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da pilha: " + caixasPilha[c].getNumeroAtendidos() + "(" + ((caixaGetNumeroAtendidos / geradorClientes.getQuantidadeGerada() * 100)) + "%)"
-                    + "\nTempo médio de espera: " + (caixasPilha[c].getNumeroAtendidos() / statTemposEsperaFila.getMedia())
+                    + "\nTempo médio de atendimento: " + (caixasPilha[c].getNumeroAtendidos() / statTemposEsperaFila.getMedia())
                     + "\n";
         }
         auxString = auxString + "\n" + "Clientes ainda na pilha:" + pilha.size();
         for (int c = 0; c < totalCaixasPilha; c++) {
             auxString = auxString + "\n" + "Cliente ainda no caixa da pilha" + (c + 1) + ": " + (caixasPilha[c].getClienteAtual() != null);
         }
-        auxString = auxString + "\n" + "Tempo medio de espera da pilha: " + statTemposEsperaPilha.getMedia();
+        auxString = auxString + "\n" + "Tempo medio de espera na pilha: " + statTemposEsperaPilha.getMedia();
 
         return auxString;
 
@@ -249,4 +249,16 @@ public class Simulacao {
         media = somatorio/listaValores.size();
     }
     
+    public void ordena(){
+        int aux, aux2;
+        for(int i=0; i<listaValores.size()-1; i++){
+            aux = listaValores.get(i);
+            aux2 = listaValores.get(i+1);
+            if(aux>aux2){
+                listaValores.set(i,aux2);
+                listaValores.set(i, aux);
+            }
+        }
+    }
+
 }
