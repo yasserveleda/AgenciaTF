@@ -197,6 +197,6 @@ public class ListArray<E> implements ListTAD<E> {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });
-    }
+    }    
 
 }

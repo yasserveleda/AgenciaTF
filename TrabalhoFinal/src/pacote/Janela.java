@@ -105,7 +105,9 @@ public class Janela extends javax.swing.JFrame {
         sim.leitura();
         String auxiliar2 = sim.simular();
         
-   
+        sim.adicionaValores();
+        sim.calculaMediana();
+        sim.calculaMedia();
         
         auxiliar = auxiliar2 + sim.salva();
         this.jTextArea1.setText(auxiliar);
