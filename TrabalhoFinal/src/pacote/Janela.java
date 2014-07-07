@@ -109,6 +109,7 @@ public class Janela extends javax.swing.JFrame {
         sim.ordena();
         sim.calculaMediana();
         sim.calculaMedia();
+        sim.calculaModa();
         
         auxiliar = auxiliar2 + sim.salva();
         this.jTextArea1.setText(auxiliar);

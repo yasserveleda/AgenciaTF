@@ -12,10 +12,11 @@ public class Simulacao {
     
     private ListArray<Integer> listaValores;
     private double mediana, media;
+    private int moda;
     private static double duracao ; //arquivo
     private static double probabilidadeChegada ; //arquivo
-    private static final int totalCaixas = 5;
-    private static final int totalCaixasPilha = 3;
+    private static final int totalCaixas = 10;
+    private static final int totalCaixasPilha = 5;
     private QueueTAD<Cliente> fila;
     private Caixa[] caixas, caixasPilha;
     private GeradorClientes geradorClientes;
@@ -181,6 +182,7 @@ public class Simulacao {
         auxString = auxString + "\n" + "Total de clientes gerados:" + geradorClientes.getQuantidadeGerada() + "\n" + "\n";
         auxString = auxString + "\n" + "Mediana dos caixas da fila: "+ mediana;
         auxString = auxString + "\n" + "Media dos caixas da fila: "+media;
+        auxString = auxString + "\n" + "Moda dos caixas da fila: "+moda;
         for (int c = 0; c < totalCaixas; c++) {
             double caixaGetNumeroAtendidos = caixas[c].getNumeroAtendidos();
             auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da fila: " + caixas[c].getNumeroAtendidos() + "(" + ((caixaGetNumeroAtendidos / geradorClientes.getQuantidadeGerada() * 100)) + "%)"
@@ -260,5 +262,24 @@ public class Simulacao {
             }
         }
     }
+    
+    public void calculaModa(){        
+        int nVezes = 0;  
+          
+        int comparaV = 0;  
+        for(int i = 0; i < listaValores.size(); i++){  
+            nVezes = 0;  
+            for(int k = i+1; k < listaValores.size(); k++){  
+                if( listaValores.get(i) == listaValores.get(k) ){  
+                    ++nVezes;                 
+                }  
+            }  
+            if (nVezes > comparaV ){  
+                moda = listaValores.get(i);
+                comparaV = nVezes;  
+            }      
+        }         
+        
+    }  
 
 }
