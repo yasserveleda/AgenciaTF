@@ -13,10 +13,10 @@ public class Simulacao {
     private ListArray<Integer> listaValores;
     private double mediana, media;
     private int moda;
-    private static double duracao ; //arquivo
-    private static double probabilidadeChegada ; //arquivo
-    private static final int totalCaixas = 10;
-    private static final int totalCaixasPilha = 5;
+    private static double duracao ; 
+    private static double probabilidadeChegada ;
+    private static final int totalCaixas = 5;
+    private static final int totalCaixasPilha = 3;
     private QueueTAD<Cliente> fila;
     private Caixa[] caixas, caixasPilha;
     private GeradorClientes geradorClientes;
@@ -26,7 +26,6 @@ public class Simulacao {
     private boolean trace; // valor indica se a simulacao ira imprimir
     private StackArray<Cliente> pilha;
     private static String auxString, auxString2, aux, texto = "arquivo.txt";
-    private ArrayList<Integer> valores;
     public Simulacao(boolean t) {
 
         pilha = new StackArray<Cliente>();
