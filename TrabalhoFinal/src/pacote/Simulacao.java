@@ -8,15 +8,19 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+
+
+
+
 public class Simulacao {
     
-    private ListArray<Integer> listaValores;
-    private double mediana, media;
-    private int moda;
+    private ListArray<Integer> listaValores, listaValoresPilha;
+    private double mediana, media, mediaPilha, medianaPilha;
+    private int moda, modaPilha;
     private static double duracao ; 
     private static double probabilidadeChegada ;
     private static final int totalCaixas = 5;
-    private static final int totalCaixasPilha = 3;
+    private static final int totalCaixasPilha = 5;
     private QueueTAD<Cliente> fila;
     private Caixa[] caixas, caixasPilha;
     private GeradorClientes geradorClientes;
@@ -30,6 +34,7 @@ public class Simulacao {
 
         pilha = new StackArray<Cliente>();
         listaValores = new ListArray<Integer>();
+        listaValoresPilha = new ListArray<Integer>();
         fila = new QueueLinked<Cliente>();
         caixas = new Caixa[totalCaixas];
         caixasPilha = new Caixa[totalCaixasPilha];
@@ -42,6 +47,9 @@ public class Simulacao {
         auxString2 = "";
         mediana= 0;
         media = 0;
+        medianaPilha = 0;
+        mediaPilha = 0;
+        modaPilha = 0;
         ArrayList<Integer> valores = new ArrayList<>();
         
         for (int c = 0; c < totalCaixas; c++) {
@@ -58,7 +66,7 @@ public class Simulacao {
 
     public void leitura() {
         // TODO code application logic here
-        Path path = Paths.get("C:\\" + texto);
+        Path path = Paths.get("H:\\" + texto);
         try (Scanner sc = new Scanner(Files.newBufferedReader(path, Charset.defaultCharset()))) {
             String linha = null;
             sc.useDelimiter("[;,:\\n]"); // separadores: ; e nova linha
@@ -181,7 +189,10 @@ public class Simulacao {
         auxString = auxString + "\n" + "Total de clientes gerados:" + geradorClientes.getQuantidadeGerada() + "\n" + "\n";
         auxString = auxString + "\n" + "Mediana dos caixas da fila: "+ mediana;
         auxString = auxString + "\n" + "Media dos caixas da fila: "+media;
-        auxString = auxString + "\n" + "Moda dos caixas da fila: "+moda;
+        auxString = auxString + "\n" + "Moda dos caixas da fila: "+moda+"\n";
+        auxString = auxString + "\n" + "Mediana dos caixas da pilha: "+ medianaPilha;
+        auxString = auxString + "\n" + "Media dos caixas da pilha: "+mediaPilha;
+        auxString = auxString + "\n" + "Moda dos caixas da pilha: "+modaPilha;
         for (int c = 0; c < totalCaixas; c++) {
             double caixaGetNumeroAtendidos = caixas[c].getNumeroAtendidos();
             auxString = auxString + "\n" + "Cliente atendidos pelo caixa " + (c + 1) + " da fila: " + caixas[c].getNumeroAtendidos() + "(" + ((caixaGetNumeroAtendidos / geradorClientes.getQuantidadeGerada() * 100)) + "%)"
@@ -218,7 +229,11 @@ public class Simulacao {
             listaValores.add(caixaGetNumeroAtendidos);
             
         }
-    
+        for(int c =0; c<totalCaixasPilha;c++){
+            int caixasGetNumeroAtendidos = caixasPilha[c].getNumeroAtendidos();
+            listaValoresPilha.add(caixasGetNumeroAtendidos);
+            
+        }
     }
     
     public void calculaMediana() {
@@ -237,17 +252,36 @@ public class Simulacao {
             mediana = (listaValores.get(posicao1) + listaValores.get(posicao2))/2;
  
         }
-                
+        
+        if (listaValoresPilha.size() % 2 == 0) {
+            int posicaoMedianaPilha = (listaValoresPilha.size() + 1) / 2;
+            posicaoMedianaPilha--; //nosso ArrayList começa do zero
+            medianaPilha = listaValores.get(posicaoMedianaPilha);
+        } else {
+            int posicao1Pilha = listaValoresPilha.size() / 2;
+            posicao1Pilha--; 
+            int posicao2Pilha = posicao1Pilha + 1;
+            medianaPilha = (listaValoresPilha.get(posicao1Pilha) + listaValoresPilha.get(posicao2Pilha))/2;
+ 
+        }
+        
     
     }
     
     public void calculaMedia(){
-        double somatorio=0;
+        double somatorio=0, somatorioPilha=0;
         
         for(int i=0; i<listaValores.size(); i++){
             somatorio = somatorio+listaValores.get(i);
         }
         media = somatorio/listaValores.size();
+        
+        for(int i=0; i<listaValoresPilha.size(); i++){
+            somatorioPilha = somatorioPilha+listaValoresPilha.get(i);
+        }
+        mediaPilha = somatorioPilha/listaValoresPilha.size();
+        
+    
     }
     
     public void ordena(){
@@ -260,6 +294,17 @@ public class Simulacao {
                 listaValores.set(i, aux);
             }
         }
+        
+        for(int i=0; i<listaValoresPilha.size()-1; i++){
+            aux = listaValoresPilha.get(i);
+            aux2 = listaValoresPilha.get(i+1);
+            if(aux>aux2){
+                listaValoresPilha.set(i,aux2);
+                listaValoresPilha.set(i, aux);
+            }
+        }
+        
+    
     }
     
     public void calculaModa(){        
@@ -279,6 +324,21 @@ public class Simulacao {
             }      
         }         
         
+        for(int i = 0; i < listaValoresPilha.size(); i++){  
+            nVezes = 0; comparaV=0; 
+            for(int k = i+1; k < listaValoresPilha.size(); k++){  
+                if( listaValoresPilha.get(i) == listaValoresPilha.get(k) ){  
+                    ++nVezes;                 
+                }  
+            }  
+            if (nVezes > comparaV ){  
+                modaPilha = listaValoresPilha.get(i);
+                comparaV = nVezes;  
+            }      
+        }
+    
+    
+    
     }  
 
 }
